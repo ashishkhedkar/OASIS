@@ -161,7 +161,7 @@ This repository currently contains the problem framing, system design, and archi
 
 ## Team
 
-**Stormtroopers** — Team ID MMSIH085, Smart India Hackathon 2026.
+**Stormtroopers** — Team ID: MMSIH085, Smart India Hackathon 2026.
 
 ---
 
