@@ -1,4 +1,4 @@
-# OASIS — Oceanic Attribution & Spill Intelligence System
+# OASIS - Oceanic Attribution & Spill Intelligence System
 
 **Smart India Hackathon 2026 | Problem Statement SIH26143 | Team Stormtroopers (MMSIH085)**
 
@@ -48,21 +48,25 @@ The processing pipeline moves from raw satellite data through to a shortlist of 
 **Sentinel-1 SAR imagery** is the raw radar capture of the sea surface used to spot possible slicks.
 
 ![Sentinel-1 SAR spill data](assets/sentinel1-sar-spill-data.png)
+
 *Sentinel-1 SAR imagery showing a spill signature at sea (dark, low-backscatter region against the surrounding sea clutter).*
 
 **Spill detection and trajectory mapping** segments the slick from the background and models how it has moved and spread over time.
 
 ![Spill detection and trajectory mapping](assets/spill-detection-trajectory-mapping.png)
+
 *Segmented slick boundary overlaid on SAR data, used as the starting point for backward drift modelling.*
 
 **AIS vessel tracking** overlays vessel positions, headings, and voyage data around the estimated spill origin and time window.
 
 ![AIS vessel tracking](assets/ais-vessel-tracking.png)
+
 *Vessel traffic in the area under investigation, pulled from AIS position reports.*
 
 **Source identification** cross-references the drift-estimated origin against vessel tracks to narrow down and rank likely sources.
 
 ![Source identification](assets/source-identification.png)
+
 *Annotated SAR imagery linking an identified slick back to a specific vessel's recorded position.*
 
 ## Architecture
