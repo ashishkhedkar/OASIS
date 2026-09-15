@@ -2,8 +2,8 @@ import torch
 import numpy as np
 from PIL import Image
 
-from src.model import UNet
-from src.setup import get_device
+from src.segmentation.model import UNet
+from src.segmentation.setup import get_device
 
 
 MODEL_PATH = "models/best_unet.pth"

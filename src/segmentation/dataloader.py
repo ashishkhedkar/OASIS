@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 
-from src.dataset import OilSpillDataset
+from src.segmentation.dataset import OilSpillDataset
 
 
 TRAIN_IMAGES = "Deep-SAR-Oil-Spill-Segmentation-Refined/images/images/train"

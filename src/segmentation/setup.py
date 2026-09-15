@@ -1,7 +1,7 @@
 import torch
 
-from src.model import UNet
-from src.losses import BCEDiceLoss
+from src.segmentation.model import UNet
+from src.segmentation.losses import BCEDiceLoss
 
 
 def get_device():
