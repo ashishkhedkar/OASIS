@@ -1,11 +1,11 @@
 import torch
 from tqdm import tqdm
 
-from src.dataloader import create_dataloaders
-from src.losses import BCEDiceLoss
-from src.metrics import dice_score, iou_score
-from src.model import UNet
-from src.setup import get_device
+from src.segmentation.dataloader import create_dataloaders
+from src.segmentation.losses import BCEDiceLoss
+from src.segmentation.metrics import dice_score, iou_score
+from src.segmentation.model import UNet
+from src.segmentation.setup import get_device
 
 
 EPOCHS = 5

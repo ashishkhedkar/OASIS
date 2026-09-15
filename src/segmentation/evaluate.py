@@ -1,9 +1,9 @@
 import torch
 
-from src.dataloader import create_dataloaders
-from src.metrics import dice_score, iou_score
-from src.model import UNet
-from src.setup import get_device
+from src.segmentation.dataloader import create_dataloaders
+from src.segmentation.metrics import dice_score, iou_score
+from src.segmentation.model import UNet
+from src.segmentation.setup import get_device
 
 
 MODEL_PATH = "models/best_unet.pth"

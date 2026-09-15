@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import torch
 
-from src.dataloader import create_dataloaders
-from src.model import UNet
-from src.setup import get_device
+from src.segmentation.dataloader import create_dataloaders
+from src.segmentation.model import UNet
+from src.segmentation.setup import get_device
 
 
 MODEL_PATH = "models/best_unet.pth"
