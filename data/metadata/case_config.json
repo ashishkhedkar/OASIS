@@ -1,0 +1,12 @@
+{
+  "case_name": "Ennore Oil Spill 2017",
+  "country": "India",
+  "region": "Ennore, Chennai, Tamil Nadu",
+  "latitude": 13.2282,
+  "longitude": 80.3633,
+  "event_date": "2017-01-28",
+  "satellite_date": "2017-01-29",
+  "satellite": "Sentinel-1A",
+  "polarization": "VV",
+  "ocean": "Bay of Bengal"
+}

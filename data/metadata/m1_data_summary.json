@@ -1,0 +1,67 @@
+{
+  "project": "OASIS",
+  "problem_statement": "SIH26143",
+  "case": "Ennore Oil Spill 2017",
+  "study_region": {
+    "name": "Ennore, Chennai, Tamil Nadu, India",
+    "latitude": 13.2282,
+    "longitude": 80.3633
+  },
+  "data_sources": {
+    "sar": {
+      "source": "Copernicus Data Space Ecosystem",
+      "satellite": "Sentinel-1A",
+      "date": "2017-01-29",
+      "polarization": [
+        "VV",
+        "VH"
+      ],
+      "product": "IW GRDH"
+    },
+    "ais": {
+      "source": "Global Fishing Watch",
+      "dataset": "public-global-presence:latest",
+      "dates": [
+        "2017-01-28",
+        "2017-01-29",
+        "2017-01-30"
+      ],
+      "format": "JSON and CSV",
+      "note": "AIS presence data is aggregated and does not represent complete vessel tracks."
+    },
+    "ocean": {
+      "source": "Copernicus Marine",
+      "dataset": "cmems_mod_glo_phy_my_0.083deg_P1D-m",
+      "dates": [
+        "2017-01-28",
+        "2017-01-29",
+        "2017-01-30"
+      ],
+      "variables": [
+        "uo",
+        "vo"
+      ],
+      "depth_m": 0.49
+    },
+    "wind": {
+      "source": "Copernicus Climate Data Store",
+      "dataset": "ERA5 hourly data on single levels",
+      "dates": [
+        "2017-01-28",
+        "2017-01-29",
+        "2017-01-30"
+      ],
+      "variables": [
+        "u10",
+        "v10"
+      ],
+      "temporal_resolution": "hourly"
+    }
+  },
+  "m1_status": "Data collection and initial preparation completed",
+  "limitations": [
+    "Sentinel-1 measurement TIFFs require proper georeferencing using Sentinel-1 metadata.",
+    "Ocean-current data has limited spatial grid coverage for the selected area.",
+    "AIS presence data is aggregated rather than a complete vessel trajectory."
+  ]
+}

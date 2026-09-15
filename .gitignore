@@ -22,3 +22,11 @@ models/*.onnx
 
 # OS
 .DS_Store
+
+# OASIS collected data
+data/raw/
+data/processed/
+
+# Environment variables and API keys
+.env
+.env.*
