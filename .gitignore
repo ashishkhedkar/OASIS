@@ -28,6 +28,7 @@ models/*.onnx
 # OASIS collected data
 data/raw/
 data/processed/
+data/metadata/
 
 # Environment variables and API keys
 .env
