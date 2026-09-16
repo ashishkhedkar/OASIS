@@ -65,12 +65,12 @@ def create_ship(ship: ShipCreate, db: Session = Depends(get_db)):
     existing_ship = db.query(models.Ship).filter(models.Ship.mmsi == ship.mmsi).first()
     if existing_ship:
         raise HTTPException(status_code=400, detail="Ship with this MMSI already exists")
-    
+
     # Create the new ship in the database
     db_ship = models.Ship(
-        mmsi=ship.mmsi, 
-        name=ship.name, 
-        latitude=ship.latitude, 
+        mmsi=ship.mmsi,
+        name=ship.name,
+        latitude=ship.latitude,
         longitude=ship.longitude
     )
     db.add(db_ship)
@@ -84,47 +84,45 @@ def get_ships(db: Session = Depends(get_db)):
     ships = db.query(models.Ship).all()
     return {"ships": ships}
 
-# 3. Process SAR Data using your Python script
+# 3. Extract SAR Geolocation Metadata
 @app.get("/api/process-sar")
 def process_sar_data():
-    # Find the XML file in the raw data directory
     xml_files = list(RAW_SAR_DIR.glob("*vv*.xml"))
-    
+
     if not xml_files:
         raise HTTPException(status_code=404, detail="No VV annotation XML file found in data/raw/sar")
-        
-    # Run your chef's logic!
-    points = extract_geolocation_points(xml_files[0])
-    
+
+    try:
+        points = extract_geolocation_points(xml_files[0])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process SAR XML: {str(e)}")
+
     return {
         "message": f"Successfully processed {len(points)} geolocation points!",
         "file_used": str(xml_files[0].name),
         "first_point": points[0] if points else None,
-        # We only return the first 10 points so we don't overwhelm the browser
-        "sample_points": points[:10] 
+        "sample_points": points[:10]
     }
 
-# 4. Trigger Oil Spill Detection (Placeholder for friend's ML model)
+# 4. Trigger Oil Spill Detection
 @app.post("/api/detect-spill")
 def detect_spill(spill: OilSpillCreate, db: Session = Depends(get_db)):
     image_path = RAW_SAR_DIR / spill.image_name
+
+    if not image_path.exists():
+        raise HTTPException(status_code=404, detail=f"Image {spill.image_name} not found in RAW_SAR_DIR")
+
     try:
-        # Check if the file exists, if not we simulate or throw an error.
-        # But we'll try running the real logic first.
-        if image_path.exists():
-            if image_path.suffix.lower() in [".tif", ".tiff"]:
-                oil_mask = detect_oil_tiled(str(image_path))
-            else:
-                oil_mask = detect_oil(str(image_path))
-            confidence = 0.95 if oil_mask.sum() > 0 else 0.1
-            area_sq_km = float(oil_mask.sum()) / 1000.0
+        if image_path.suffix.lower() in [".tif", ".tiff"]:
+            oil_mask = detect_oil_tiled(str(image_path))
         else:
-            confidence = 0.8 # Fallback mock
-            area_sq_km = 12.5 # Fallback mock
+            oil_mask = detect_oil(str(image_path))
+
+        confidence = 0.95 if oil_mask.sum() > 0 else 0.1
+        area_sq_km = float(oil_mask.sum()) / 1000.0
     except Exception as e:
-        confidence = 0.8
-        area_sq_km = 12.5
-    
+        raise HTTPException(status_code=500, detail=f"ML Inference failed: {str(e)}")
+
     # Save the result to the database
     db_spill = models.OilSpill(
         image_name=spill.image_name,
@@ -147,15 +145,18 @@ def get_spills(db: Session = Depends(get_db)):
 # 6. Simulate Ocean Drift
 @app.post("/api/simulate-drift")
 def simulate_drift(req: DriftSimulationRequest):
-    origins = predict_origins(
-        latitude=req.latitude, 
-        longitude=req.longitude, 
-        timestamp=req.timestamp, 
-        total_hours=req.total_hours
-    )
-    clusters = group_origin_clusters(origins)
-    centers = calculate_cluster_centers(clusters)
-    return {"centers": centers}
+    try:
+        origins = predict_origins(
+            latitude=req.latitude,
+            longitude=req.longitude,
+            timestamp=req.timestamp,
+            total_hours=req.total_hours
+        )
+        clusters = group_origin_clusters(origins)
+        centers = calculate_cluster_centers(clusters)
+        return {"centers": centers}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Drift simulation failed: {str(e)}")
 
 # Serve the HTML frontend files from the "frontend_ui" folder at the root URL
 frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend_ui')
