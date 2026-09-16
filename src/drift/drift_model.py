@@ -1,7 +1,11 @@
 WINDAGE_COEFFICIENT = 0.03
 
 
-def calculate_drift_velocity(current, wind):
+def calculate_drift_velocity(
+    current,
+    wind,
+    windage_coefficient=WINDAGE_COEFFICIENT,
+):
     """
     Combine ocean current and wind to estimate
     effective oil drift velocity.
@@ -9,6 +13,8 @@ def calculate_drift_velocity(current, wind):
     Args:
         current: Dictionary with east_mps and north_mps.
         wind: Dictionary with east_mps and north_mps.
+        windage_coefficient: Fraction of wind speed
+            contributing to oil movement.
 
     Returns:
         Dictionary containing effective drift velocity.
@@ -16,12 +22,12 @@ def calculate_drift_velocity(current, wind):
 
     east_velocity = (
         current["east_mps"]
-        + WINDAGE_COEFFICIENT * wind["east_mps"]
+        + windage_coefficient * wind["east_mps"]
     )
 
     north_velocity = (
         current["north_mps"]
-        + WINDAGE_COEFFICIENT * wind["north_mps"]
+        + windage_coefficient * wind["north_mps"]
     )
 
     return {

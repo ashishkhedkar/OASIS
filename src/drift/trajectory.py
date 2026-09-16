@@ -15,6 +15,7 @@ def generate_backtrack_trajectory(
     timestamp,
     total_hours,
     step_hours=1,
+    windage_coefficient=0.03,
 ):
     """
     Generate points along the estimated spill path
@@ -65,6 +66,7 @@ def generate_backtrack_trajectory(
         velocity = calculate_drift_velocity(
             current,
             wind,
+            windage_coefficient=windage_coefficient,
         )
 
         displacement = displacement_after_hours(
