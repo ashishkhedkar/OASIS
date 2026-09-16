@@ -61,7 +61,8 @@
   "m1_status": "Data collection and initial preparation completed",
   "limitations": [
     "Sentinel-1 measurement TIFFs require proper georeferencing using Sentinel-1 metadata.",
-    "Ocean-current data has limited spatial grid coverage for the selected area.",
+    "Ocean-current data has limited spatial grid coverage and daily temporal resolution for the selected area.",
+    "ERA5 wind data provides hourly temporal resolution.",
     "AIS presence data is aggregated rather than a complete vessel trajectory."
-  ]
+]
 }
