@@ -8,6 +8,7 @@ loading -> preprocessing -> filtering -> feature extraction
 -> scoring -> ranking.
 """
 
+import pandas as pd
 from src.ais.loader import load_ais_data
 from src.ais.filtering import filter_nearby_vessels
 from src.ais.features import calculate_attribution_features
@@ -65,7 +66,7 @@ def predict_vessels(
 
     return ranked
 
-def predict_vessels_from_origins(origins, top_n=10):
+def predict_vessels_from_origins(origins, incident_timestamp, top_n=10):
     """
     Run M4 vessel attribution for multiple candidate origins
     produced by M3.
@@ -74,11 +75,17 @@ def predict_vessels_from_origins(origins, top_n=10):
     all_results = []
 
     for origin in origins:
+        # M3 gives how many hours back each candidate origin is.
+        # Convert that into the estimated time of the spill origin.
+        incident_time = pd.to_datetime(incident_timestamp)
+        origin_time = incident_time - pd.Timedelta(
+            hours=origin["hours_back"]
+        )
         # Use M3's candidate origin as the center of the AIS search.
         results = predict_vessels(
             origin_latitude=origin["latitude"],
             origin_longitude=origin["longitude"],
-            origin_time=None,
+            origin_time=origin_time,
             radius_km=10,
             top_n=top_n,
         )
