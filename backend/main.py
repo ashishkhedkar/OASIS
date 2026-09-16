@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from database import engine, Base, get_db
+from backend.database import engine, Base, get_db
 import models
 from src.data.sar_geolocation import extract_geolocation_points, RAW_SAR_DIR
 from src.segmentation.inference import detect_oil, detect_oil_tiled
