@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from database import engine, Base, get_db
@@ -119,6 +120,10 @@ def detect_spill(spill: OilSpillCreate, db: Session = Depends(get_db)):
 def get_spills(db: Session = Depends(get_db)):
     spills = db.query(models.OilSpill).all()
     return {"spills": spills}
+
+# Serve the HTML frontend files from the "frontend_ui" folder at the root URL
+frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend_ui')
+app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="site")
 
 if __name__ == "__main__":
     import uvicorn
