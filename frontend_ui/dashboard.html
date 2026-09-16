@@ -12,310 +12,49 @@
     />
 
     <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #07111f;
-            color: #e7eef5;
-        }
-
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* =========================
-           SIDEBAR
-        ========================= */
-
-        .sidebar {
-            width: 225px;
-            background: #0a1624;
-            border-right: 1px solid #1d3043;
-            padding: 24px 18px;
-        }
-
-        .logo {
-            font-size: 25px;
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-
-        .subtitle {
-            font-size: 9px;
-            line-height: 1.5;
-            color: #71889d;
-            letter-spacing: 1.2px;
-            margin-top: 5px;
-            margin-bottom: 34px;
-        }
-
-        .nav-title {
-            font-size: 9px;
-            color: #61788d;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
-        }
-
-        .nav-item {
-            padding: 11px 10px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            color: #8ea3b5;
-            font-size: 12px;
-        }
-
-        .nav-item.active {
-            background: #10273a;
-            color: #61c8f4;
-            border-left: 3px solid #61c8f4;
-        }
-
-        .system-status {
-            margin-top: 32px;
-            padding: 11px;
-            border: 1px solid #1d3043;
-            border-radius: 6px;
-            color: #7f96a9;
-            font-size: 10px;
-        }
-
-        .status-dot {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: #48c99a;
-            border-radius: 50%;
-            margin-right: 6px;
-        }
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        .main {
-            flex: 1;
-            padding: 24px 28px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            font-size: 23px;
-            font-weight: 500;
-        }
-
-        .header p {
-            margin-top: 5px;
-            color: #71899e;
-            font-size: 10px;
-            letter-spacing: 1.2px;
-        }
-
-        .case-badge {
-            border: 1px solid #254861;
-            border-radius: 5px;
-            padding: 7px 11px;
-            color: #69c9f5;
-            font-size: 10px;
-        }
-
-        /* =========================
-           STAT CARDS
-        ========================= */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 13px;
-            margin-bottom: 18px;
-        }
-
-        .card {
-            background: #0b1929;
-            border: 1px solid #1d3043;
-            border-radius: 7px;
-            padding: 15px;
-        }
-
-        .card-title {
-            color: #70879b;
-            font-size: 9px;
-            letter-spacing: 1.2px;
-            margin-bottom: 8px;
-        }
-
-        .card-value {
-            font-size: 21px;
-            font-weight: 600;
-        }
-
-        .card-small {
-            margin-top: 4px;
-            color: #688096;
-            font-size: 9px;
-        }
-
-        /* =========================
-           MAP
-        ========================= */
-
-        .map-section {
-            background: #0b1929;
-            border: 1px solid #1d3043;
-            border-radius: 7px;
-            padding: 14px;
-            margin-bottom: 18px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 11px;
-        }
-
-        .section-header h2 {
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .map-controls button {
-            background: transparent;
-            border: 1px solid #29465c;
-            color: #86a8bd;
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 9px;
-            cursor: pointer;
-            margin-left: 4px;
-        }
-
-        .map-controls button:hover {
-            background: #10283b;
-            color: #a8c9dc;
-        }
-
-        #oasis-map {
-            width: 100%;
-            height: 460px;
-            border-radius: 5px;
-        }
-
-        /* =========================
-           BOTTOM
-        ========================= */
-
-        .bottom-grid {
-            display: grid;
-            grid-template-columns: 1.45fr 1fr;
-            gap: 18px;
-        }
-
-        .panel {
-            background: #0b1929;
-            border: 1px solid #1d3043;
-            border-radius: 7px;
-            padding: 15px;
-        }
-
-        .panel h2 {
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 10px;
-        }
-
-        th {
-            text-align: left;
-            color: #688096;
-            font-weight: normal;
-            padding: 8px 5px;
-            border-bottom: 1px solid #1d3043;
-        }
-
-        td {
-            padding: 9px 5px;
-            color: #bac9d5;
-            border-bottom: 1px solid #15283a;
-        }
-
-        .confidence {
-            color: #57cfa0;
-        }
-
-        .analysis-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 9px 0;
-            border-bottom: 1px solid #15283a;
-            font-size: 10px;
-        }
-
-        .analysis-row span:first-child {
-            color: #71899e;
-        }
-
-        .complete {
-            color: #57cfa0;
-        }
-
-        .processing {
-            color: #e2bd6a;
-        }
-
-        /* =========================
-           MAP MARKERS
-        ========================= */
-
-        .spill-marker {
-            width: 13px;
-            height: 13px;
-            background: #e05a52;
-            border: 2px solid white;
-            border-radius: 50%;
-            box-shadow: 0 0 0 5px rgba(224, 90, 82, 0.16);
-        }
-
-        .origin-marker {
-            width: 10px;
-            height: 10px;
-            background: #55b8df;
-            border: 2px solid white;
-            border-radius: 50%;
-        }
-
-        @media (max-width: 900px) {
-
-            .sidebar {
-                width: 180px;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .bottom-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Arial, sans-serif; background: #07111f; color: #e7eef5; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 225px; background: #0a1624; border-right: 1px solid #1d3043; padding: 24px 18px; }
+.logo { font-size: 25px; font-weight: 700; letter-spacing: 2px; }
+.subtitle { font-size: 9px; line-height: 1.5; color: #71889d; letter-spacing: 1.2px; margin-top: 5px; margin-bottom: 34px; }
+.nav-title { font-size: 9px; color: #61788d; letter-spacing: 1.5px; margin-bottom: 10px; }
+.nav-item { padding: 11px 10px; margin-bottom: 5px; border-radius: 5px; color: #8ea3b5; font-size: 12px; cursor: pointer; }
+.nav-item.active { background: #10273a; color: #61c8f4; border-left: 3px solid #61c8f4; }
+.system-status { margin-top: 32px; padding: 11px; border: 1px solid #1d3043; border-radius: 6px; color: #7f96a9; font-size: 10px; }
+.status-dot { display: inline-block; width: 6px; height: 6px; background: #48c99a; border-radius: 50%; margin-right: 6px; }
+.main { flex: 1; padding: 35px 45px; display: flex; flex-direction: column; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 35px; }
+h1 { font-size: 26px; font-weight: 400; margin-bottom: 6px; letter-spacing: 0.5px; }
+p { font-size: 11px; color: #7f96a9; letter-spacing: 1px; }
+.case-badge { display: flex; gap: 10px; align-items: center; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 35px; }
+.card { background: #0b1929; border: 1px solid #1d3043; border-radius: 7px; padding: 18px; }
+.card-title { font-size: 10px; color: #71889d; letter-spacing: 1px; margin-bottom: 12px; }
+.card-value { font-size: 26px; font-weight: 300; margin-bottom: 8px; color: #e7eef5; }
+.card-small { font-size: 11px; color: #61788d; }
+.map-section { background: #0b1929; border: 1px solid #1d3043; border-radius: 7px; padding: 14px; margin-bottom: 18px; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-left: 4px; padding-right: 4px; }
+h2 { font-size: 13px; font-weight: 600; color: #a8c9dc; letter-spacing: 0.5px; }
+.map-controls { display: flex; gap: 8px; align-items: center; }
+.map-controls button { background: none; border: 1px solid #2a4158; color: #7f96a9; padding: 6px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; transition: all 0.2s; }
+.map-controls button.active { background: #10273a; color: #61c8f4; border-color: #61c8f4; }
+.map-controls button:hover { background: #10283b; color: #a8c9dc; }
+#oasis-map { width: 100%; height: 460px; border-radius: 5px; }
+.bottom-grid { display: grid; grid-template-columns: 2fr 1.2fr; gap: 18px; flex: 1; }
+.panel { background: #0b1929; border: 1px solid #1d3043; border-radius: 7px; padding: 22px; }
+.panel h2 { margin-bottom: 18px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; padding-bottom: 12px; color: #61788d; font-weight: 500; letter-spacing: 1px; font-size: 9px; border-bottom: 1px solid #1d3043; }
+td { padding: 14px 0; border-bottom: 1px solid #142436; color: #a8c9dc; }
+tr:last-child td { border-bottom: none; }
+.analysis-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #142436; font-size: 12px; color: #a8c9dc; }
+.analysis-row:last-child { border-bottom: none; }
+.complete { color: #48c99a; font-size: 10px; letter-spacing: 1px; }
+.processing { color: #f59e0b; font-size: 10px; letter-spacing: 1px; }
+.spill-marker { width: 13px; height: 13px; background-color: #ff4b4b; border: 2px solid white; border-radius: 50%; }
+.warning-badge { background: #ff4b4b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 9px; margin-left: 5px; }
+@media print { .sidebar, .map-controls, button, input[type="range"] { display: none !important; } .app { flex-direction: column; } .main { padding: 0; } #oasis-map { height: 400px; border: 1px solid black; } .case-badge { display: none !important; } }
     </style>
 </head>
 
@@ -472,21 +211,7 @@
                     Spill Origin & Drift Analysis
                 </h2>
 
-                <div class="map-controls">
-
-                    <button onclick="toggleOrigins()">
-                        Origins
-                    </button>
-
-                    <button onclick="toggleUncertainty()">
-                        Uncertainty
-                    </button>
-
-                    <button onclick="toggleTrajectories()">
-                        Drift paths
-                    </button>
-
-                </div>
+                <div class="map-controls"><button onclick="toggleSpill()" id="btn-spill" class="active">Spill</button><button onclick="toggleOrigin()" id="btn-origin" class="active">Origins</button><button onclick="toggleTrajectory()" id="btn-trajectory" class="active">Trajectories</button><label style="font-size: 10px; color: #8ea3b5; margin-left: 10px;">TIMELINE:</label><input type="range" id="timeline-slider" min="0" max="6" value="6" step="1" oninput="updateTimeline(this.value)" style="width: 100px;"></div>
 
             </div>
 
@@ -534,43 +259,7 @@
             </section>
 
 
-            <section class="panel">
-
-                <h2>
-                    M3 Analytical Status
-                </h2>
-
-                <div class="analysis-row">
-                    <span>Ocean current</span>
-                    <span class="complete">AVAILABLE</span>
-                </div>
-
-                <div class="analysis-row">
-                    <span>Wind data</span>
-                    <span class="complete">AVAILABLE</span>
-                </div>
-
-                <div class="analysis-row">
-                    <span>Backward drift</span>
-                    <span class="complete">COMPLETE</span>
-                </div>
-
-                <div class="analysis-row">
-                    <span>Windage hypotheses</span>
-                    <span class="complete">5 TESTED</span>
-                </div>
-
-                <div class="analysis-row">
-                    <span>Origin uncertainty</span>
-                    <span class="complete">CALCULATED</span>
-                </div>
-
-                <div class="analysis-row">
-                    <span>AIS correlation</span>
-                    <span class="processing">NEXT MODULE</span>
-                </div>
-
-            </section>
+            <section class="panel"><h2>Ranked Candidate Vessels</h2><table><thead><tr><th>MMSI</th><th>SCORE</th><th>WARNINGS</th></tr></thead><tbody id="ranked-vessels-table"><tr><td colspan="3" style="text-align: center; color: #8ea3b5;">Loading ML analysis...</td></tr></tbody></table></section>
 
         </div>
 
@@ -582,8 +271,14 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 
-<script>
 
+
+
+
+
+
+
+<script>
     // ==========================================
     // MAP
     // ==========================================
@@ -596,9 +291,6 @@
         11
     );
 
-
-    // OpenStreetMap
-
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
@@ -607,437 +299,160 @@
         }
     ).addTo(map);
 
+    const spillLayer = L.layerGroup().addTo(map);
+    const originLayer = L.layerGroup().addTo(map);
+    const trajectoryLayer = L.layerGroup().addTo(map);
+
+    const spillIcon = L.divIcon({
+        className: "",
+        html: '<div class="spill-marker"></div>',
+        iconSize: [13, 13],
+        iconAnchor: [6, 6]
+    });
+
+    let currentOrigins = [];
+    let currentIncidentTime = "2026-09-17 12:00:00"; // Mock current time
+    let trajectoryPolylines = [];
+
+    // Draw the spill
+    L.marker([spillLatitude, spillLongitude], { icon: spillIcon })
+        .bindPopup(`<b>Observed Spill</b><br>Latitude: ${spillLatitude}<br>Longitude: ${spillLongitude}`)
+        .addTo(spillLayer);
 
     // ==========================================
-    // LAYERS
+    // LIVE PIPELINE
     // ==========================================
 
-    const originLayer =
-        L.layerGroup().addTo(map);
-
-    const uncertaintyLayer =
-        L.layerGroup().addTo(map);
-
-    const trajectoryLayer =
-        L.layerGroup().addTo(map);
-
-
-    // ==========================================
-    // OBSERVED SPILL
-    // ==========================================
-
-    const spillIcon =
-        L.divIcon({
-            className: "",
-            html: '<div class="spill-marker"></div>',
-            iconSize: [13, 13],
-            iconAnchor: [6, 6]
-        });
-
-
-    const spillMarker =
-        L.marker(
-            [spillLatitude, spillLongitude],
-            {
-                icon: spillIcon
-            }
-        )
-        .bindPopup(`
-            <b>Observed Spill</b><br><br>
-            Ennore, Chennai<br>
-            Latitude: ${spillLatitude}<br>
-            Longitude: ${spillLongitude}
-        `)
-        .bindTooltip("Observed Spill");
-
-
-    spillMarker.addTo(map);
-
-
-    // ==========================================
-    // SUBTLE SPILL ZONE
-    // ==========================================
-
-    const spillZone =
-        L.circle(
-            [spillLatitude, spillLongitude],
-            {
-                radius: 700,
-                color: "#d85c55",
-                weight: 1,
-                opacity: 0.45,
-                fillColor: "#d85c55",
-                fillOpacity: 0.07
-            }
-        )
-        .bindTooltip(
-            "Observed spill zone"
-        );
-
-
-    spillZone.addTo(map);
-
-
-    // ==========================================
-    // LOAD PROBABLE ORIGINS
-    // ==========================================
-
-    fetch("../data/metadata/probable_origins.json")
-
-        .then(response => {
-
-            if (!response.ok) {
-                throw new Error(
-                    "Unable to load probable_origins.json"
-                );
-            }
-
-            return response.json();
-
-        })
-
-        .then(centers => {
-
-            document.getElementById(
-                "origin-count"
-            ).textContent = centers.length;
-
-
-            // ==================================
-            // ORIGINS
-            // ==================================
-
-            centers.forEach(
-                (center, index) => {
-
-                    const latitude =
-                        center.latitude;
-
-                    const longitude =
-                        center.longitude;
-
-
-                    const originIcon =
-                        L.divIcon({
-                            className: "",
-                            html:
-                                '<div class="origin-marker"></div>',
-                            iconSize: [10, 10],
-                            iconAnchor: [5, 5]
-                        });
-
-
-                    const marker =
-                        L.marker(
-                            [
-                                latitude,
-                                longitude
-                            ],
-                            {
-                                icon:
-                                    originIcon
-                            }
-                        );
-
-
-                    marker.bindPopup(`
-
-                        <b>Probable Spill Origin</b>
-                        <br><br>
-
-                        Backtrack:
-                        ${center.hours_back} hours
-                        <br>
-
-                        Latitude:
-                        ${latitude.toFixed(6)}
-                        <br>
-
-                        Longitude:
-                        ${longitude.toFixed(6)}
-                        <br>
-
-                        Confidence:
-                        ${(center.confidence * 100).toFixed(1)}%
-                        <br>
-
-                        Uncertainty:
-                        ${center.uncertainty_km.toFixed(2)} km
-
-                    `);
-
-
-                    marker.bindTooltip(
-                        `Origin ${index + 1} · ${center.hours_back}h`
-                    );
-
-
-                    marker.addTo(
-                        originLayer
-                    );
-
-
-                    // ==================================
-                    // UNCERTAINTY
-                    // ==================================
-
-                    const uncertainty =
-                        L.circle(
-                            [
-                                latitude,
-                                longitude
-                            ],
-                            {
-                                radius:
-                                    center.uncertainty_km * 1000,
-
-                                color: "#d3a95f",
-
-                                weight: 1,
-
-                                opacity: 0.35,
-
-                                fillColor: "#d3a95f",
-
-                                fillOpacity: 0.035
-                            }
-                        );
-
-
-                    uncertainty.bindTooltip(
-                        `Uncertainty · ${
-                            center.uncertainty_km.toFixed(2)
-                        } km`
-                    );
-
-
-                    uncertainty.addTo(
-                        uncertaintyLayer
-                    );
-
-
-                    // ==================================
-                    // CLEAN DRIFT PATH
-                    // ==================================
-
-                    /*
-                       Temporary visualization using
-                       the calculated origin center.
-
-                       These are intentionally thin and
-                       solid so they do not look like
-                       artificial AI graphics.
-                    */
-
-                    const midpointLat =
-                        (
-                            spillLatitude +
-                            latitude
-                        ) / 2;
-
-
-                    const midpointLng =
-                        (
-                            spillLongitude +
-                            longitude
-                        ) / 2;
-
-
-                    const curvedPath = [
-
-                        [
-                            spillLatitude,
-                            spillLongitude
-                        ],
-
-                        [
-                            midpointLat + 0.0015,
-                            midpointLng - 0.001
-                        ],
-
-                        [
-                            latitude,
-                            longitude
-                        ]
-
-                    ];
-
-
-                    const trajectory =
-                        L.polyline(
-                            curvedPath,
-                            {
-                                color: "#63a9c7",
-                                weight: 2,
-                                opacity: 0.45,
-                                smoothFactor: 1.5
-                            }
-                        );
-
-
-                    trajectory.bindTooltip(
-                        `Backward drift · ${center.hours_back}h`
-                    );
-
-
-                    trajectory.addTo(
-                        trajectoryLayer
-                    );
-
+    async function runLiveAnalysis() {
+        try {
+            // 1. Simulate Drift
+            const driftRes = await fetch("http://localhost:8000/api/simulate-drift", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    latitude: spillLatitude,
+                    longitude: spillLongitude,
+                    timestamp: currentIncidentTime,
+                    total_hours: 6
+                })
+            });
+            const driftData = await driftRes.json();
+            
+            if (driftData.centers) {
+                // Populate origin table
+                const tableBody = document.getElementById("origin-table");
+                tableBody.innerHTML = "";
+                
+                currentOrigins = driftData.centers.map((c, idx) => {
+                    const lat = c.center_lat;
+                    const lon = c.center_lon;
+                    const hours_back = 6; 
+                    const conf = 0.8;
+                    const uncert = c.radius_km || 5.0;
+                    
+                    // Add row to table
+                    const row = `<tr>
+                        <td>-${hours_back}H</td>
+                        <td>${lat.toFixed(4)}</td>
+                        <td>${lon.toFixed(4)}</td>
+                        <td>${(conf * 100).toFixed(0)}%</td>
+                        <td>±${uncert.toFixed(1)}km</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                    
+                    // Draw Origin Circle
+                    L.circle([lat, lon], {
+                        radius: uncert * 1000,
+                        color: "#ff4b4b",
+                        weight: 1,
+                        fillColor: "#ff4b4b",
+                        fillOpacity: 0.1
+                    }).addTo(originLayer);
+                    
+                    // Draw Trajectory line
+                    const line = L.polyline([
+                        [lat, lon],
+                        [spillLatitude, spillLongitude]
+                    ], { color: '#ff4b4b', weight: 2, dashArray: '5, 5' }).addTo(trajectoryLayer);
+                    trajectoryPolylines.push(line);
+
+                    return { latitude: lat, longitude: lon, hours_back: hours_back, confidence: conf, uncertainty_km: uncert };
                 });
-
-
-            // ==================================
-            // TABLE
-            // ==================================
-
-            const table =
-                document.getElementById(
-                    "origin-table"
-                );
-
-
-            table.innerHTML = "";
-
-
-            centers.forEach(
-                center => {
-
-                    const row =
-                        document.createElement(
-                            "tr"
-                        );
-
-
-                    row.innerHTML = `
-
-                        <td>
-                            ${center.hours_back}h
-                        </td>
-
-                        <td>
-                            ${center.latitude.toFixed(5)}
-                        </td>
-
-                        <td>
-                            ${center.longitude.toFixed(5)}
-                        </td>
-
-                        <td class="confidence">
-                            ${(center.confidence * 100).toFixed(0)}%
-                        </td>
-
-                        <td>
-                            ${center.uncertainty_km.toFixed(2)} km
-                        </td>
-
-                    `;
-
-
-                    table.appendChild(row);
-
+                
+                // 2. Rank Vessels
+                const rankRes = await fetch("http://localhost:8000/api/rank-vessels", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        origins: currentOrigins,
+                        incident_timestamp: currentIncidentTime
+                    })
+                });
+                const rankData = await rankRes.json();
+                
+                const rankedTable = document.getElementById("ranked-vessels-table");
+                rankedTable.innerHTML = "";
+                if (rankData.ranked_vessels && rankData.ranked_vessels.length > 0) {
+                    rankData.ranked_vessels.slice(0, 5).forEach(v => {
+                        let warnings = "";
+                        if (v.temporal_score < 0.5) warnings += `<span class="warning-badge">AIS GAP</span>`;
+                        if (v.spatial_score < 0.5) warnings += `<span class="warning-badge">DEVIATION</span>`;
+                        
+                        const row = `<tr>
+                            <td>${v.MMSI}</td>
+                            <td>${(v.attribution_score * 100).toFixed(1)}%</td>
+                            <td>${warnings}</td>
+                        </tr>`;
+                        rankedTable.innerHTML += row;
+                        
+                        // Draw Ship Marker
+                        const shipIcon = L.icon({
+                            iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+                            iconSize: [25, 41], iconAnchor: [12, 41]
+                        });
+                        L.marker([v.LAT, v.LON], { icon: shipIcon })
+                            .bindPopup(`<b>MMSI: ${v.MMSI}</b><br>Score: ${(v.attribution_score * 100).toFixed(1)}%`)
+                            .addTo(originLayer);
+                    });
+                } else {
+                    rankedTable.innerHTML = `<tr><td colspan="3" style="text-align: center;">No candidate vessels found</td></tr>`;
                 }
-            );
-
-        })
-
-
-        .catch(error => {
-
-            console.error(
-                "OASIS M3 error:",
-                error
-            );
-
-
-            document.getElementById(
-                "origin-table"
-            ).innerHTML = `
-
-                <tr>
-
-                    <td colspan="5">
-                        Unable to load origin data.
-                    </td>
-
-                </tr>
-
-            `;
-
-        });
-
-
-    // ==========================================
-    // TOGGLES
-    // ==========================================
-
-    function toggleOrigins() {
-
-        if (
-            map.hasLayer(originLayer)
-        ) {
-
-            map.removeLayer(
-                originLayer
-            );
-
-        } else {
-
-            map.addLayer(
-                originLayer
-            );
-
+            }
+        } catch (error) {
+            console.error("API Error:", error);
+            document.getElementById("ranked-vessels-table").innerHTML = `<tr><td colspan="3" style="text-align: center; color: red;">API Connection Failed</td></tr>`;
         }
-
     }
 
+    // Run pipeline on load
+    runLiveAnalysis();
 
-    function toggleUncertainty() {
-
-        if (
-            map.hasLayer(
-                uncertaintyLayer
-            )
-        ) {
-
-            map.removeLayer(
-                uncertaintyLayer
-            );
-
-        } else {
-
-            map.addLayer(
-                uncertaintyLayer
-            );
-
-        }
-
+    // UI Handlers
+    function toggleSpill() {
+        const btn = document.getElementById("btn-spill");
+        if (map.hasLayer(spillLayer)) { map.removeLayer(spillLayer); btn.classList.remove("active"); }
+        else { map.addLayer(spillLayer); btn.classList.add("active"); }
     }
-
-
-    function toggleTrajectories() {
-
-        if (
-            map.hasLayer(
-                trajectoryLayer
-            )
-        ) {
-
-            map.removeLayer(
-                trajectoryLayer
-            );
-
+    function toggleOrigin() {
+        const btn = document.getElementById("btn-origin");
+        if (map.hasLayer(originLayer)) { map.removeLayer(originLayer); btn.classList.remove("active"); }
+        else { map.addLayer(originLayer); btn.classList.add("active"); }
+    }
+    function toggleTrajectory() {
+        const btn = document.getElementById("btn-trajectory");
+        if (map.hasLayer(trajectoryLayer)) { map.removeLayer(trajectoryLayer); btn.classList.remove("active"); }
+        else { map.addLayer(trajectoryLayer); btn.classList.add("active"); }
+    }
+    function updateTimeline(val) {
+        // Slider value corresponds to hours backwards. Here we just fade the trajectory or hide origins as a mock simulation
+        if (val < 6) {
+            map.removeLayer(originLayer);
         } else {
-
-            map.addLayer(
-                trajectoryLayer
-            );
-
+            map.addLayer(originLayer);
         }
-
     }
 
 </script>
-
 </body>
 </html>
+

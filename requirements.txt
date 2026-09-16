@@ -31,3 +31,10 @@ typing_extensions==4.16.0
 fastapi
 uvicorn
 sqlalchemy
+rasterio
+xarray
+pandas
+folium
+geopandas
+shapely
+netCDF4

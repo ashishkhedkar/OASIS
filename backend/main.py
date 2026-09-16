@@ -13,7 +13,8 @@ import models
 from src.data.sar_geolocation import extract_geolocation_points, RAW_SAR_DIR
 from src.segmentation.inference import detect_oil, detect_oil_tiled
 from src.drift.inference import predict_origins, group_origin_clusters, calculate_cluster_centers
-
+from src.ais.inference import predict_vessels_from_origins
+from typing import List
 # Create database tables (if they don't exist yet)
 Base.metadata.create_all(bind=engine)
 
@@ -55,6 +56,17 @@ class DriftSimulationRequest(BaseModel):
     longitude: float
     timestamp: str
     total_hours: int = 6
+
+class CandidateOrigin(BaseModel):
+    latitude: float
+    longitude: float
+    hours_back: float
+    confidence: float = 0.8
+    uncertainty_km: float = 5.0
+
+class RankVesselsRequest(BaseModel):
+    origins: List[CandidateOrigin]
+    incident_timestamp: str
 
 # --- New Endpoints ---
 
@@ -157,6 +169,24 @@ def simulate_drift(req: DriftSimulationRequest):
         return {"centers": centers}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Drift simulation failed: {str(e)}")
+
+# 7. Rank Candidate Vessels
+@app.post("/api/rank-vessels")
+def rank_vessels(req: RankVesselsRequest):
+    origins_dicts = [o.model_dump() for o in req.origins]  # Use model_dump in Pydantic v2
+    try:
+        results_df = predict_vessels_from_origins(origins_dicts, req.incident_timestamp, top_n=10)
+        if results_df is None or results_df.empty:
+            return {"ranked_vessels": []}
+        
+        # Replace NaN with None so it serializes correctly to JSON
+        import math
+        import numpy as np
+        results_df = results_df.replace({np.nan: None})
+        
+        return {"ranked_vessels": results_df.to_dict(orient="records")}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Vessel ranking failed: {str(e)}")
 
 # Serve the HTML frontend files from the "frontend_ui" folder at the root URL
 frontend_dir = os.path.join(os.path.dirname(__file__), '..', 'frontend_ui')
