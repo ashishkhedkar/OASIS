@@ -1,0 +1,128 @@
+import sys
+import os
+# Add the parent directory to sys.path so we can import from src
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from database import engine, Base, get_db
+import models
+from src.data.sar_geolocation import extract_geolocation_points, RAW_SAR_DIR
+
+# Create database tables (if they don't exist yet)
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(
+    title="SIH 2026 API",
+    description="Backend API for SAR and AIS Data Processing",
+    version="1.0.0"
+)
+
+# Configure CORS so the React frontend can talk to this API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Update this in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/api/health")
+def health_check():
+    return {"status": "ok", "message": "API is running perfectly"}
+
+# --- Data Validation Schemas ---
+class ShipCreate(BaseModel):
+    mmsi: str
+    name: str
+    latitude: float
+    longitude: float
+
+class OilSpillCreate(BaseModel):
+    image_name: str
+    latitude: float
+    longitude: float
+    area_sq_km: float = None
+    confidence: float = None
+
+# --- New Endpoints ---
+
+# 1. Add a new ship to the database
+@app.post("/api/ships")
+def create_ship(ship: ShipCreate, db: Session = Depends(get_db)):
+    # Check if a ship with this MMSI already exists
+    existing_ship = db.query(models.Ship).filter(models.Ship.mmsi == ship.mmsi).first()
+    if existing_ship:
+        raise HTTPException(status_code=400, detail="Ship with this MMSI already exists")
+    
+    # Create the new ship in the database
+    db_ship = models.Ship(
+        mmsi=ship.mmsi, 
+        name=ship.name, 
+        latitude=ship.latitude, 
+        longitude=ship.longitude
+    )
+    db.add(db_ship)
+    db.commit()
+    db.refresh(db_ship)
+    return {"message": "Ship created successfully!", "ship": db_ship}
+
+# 2. Get a list of all ships from the database
+@app.get("/api/ships")
+def get_ships(db: Session = Depends(get_db)):
+    ships = db.query(models.Ship).all()
+    return {"ships": ships}
+
+# 3. Process SAR Data using your Python script
+@app.get("/api/process-sar")
+def process_sar_data():
+    # Find the XML file in the raw data directory
+    xml_files = list(RAW_SAR_DIR.glob("*vv*.xml"))
+    
+    if not xml_files:
+        raise HTTPException(status_code=404, detail="No VV annotation XML file found in data/raw/sar")
+        
+    # Run your chef's logic!
+    points = extract_geolocation_points(xml_files[0])
+    
+    return {
+        "message": f"Successfully processed {len(points)} geolocation points!",
+        "file_used": str(xml_files[0].name),
+        "first_point": points[0] if points else None,
+        # We only return the first 10 points so we don't overwhelm the browser
+        "sample_points": points[:10] 
+    }
+
+# 4. Trigger Oil Spill Detection (Placeholder for friend's ML model)
+@app.post("/api/detect-spill")
+def detect_spill(spill: OilSpillCreate, db: Session = Depends(get_db)):
+    # Here is where we will eventually call your friend's ML script!
+    # e.g., result = run_ml_model(spill.image_name)
+    
+    # Save the result to the database
+    db_spill = models.OilSpill(
+        image_name=spill.image_name,
+        latitude=spill.latitude,
+        longitude=spill.longitude,
+        area_sq_km=spill.area_sq_km,
+        confidence=spill.confidence
+    )
+    db.add(db_spill)
+    db.commit()
+    db.refresh(db_spill)
+    return {"message": "Spill detected and saved to database!", "spill": db_spill}
+
+# 5. Get History of detected spills
+@app.get("/api/spills")
+def get_spills(db: Session = Depends(get_db)):
+    spills = db.query(models.OilSpill).all()
+    return {"spills": spills}
+
+if __name__ == "__main__":
+    import uvicorn
+    # To run the server, use this command in your terminal:
+    # cd backend
+    # uvicorn main:app --reload
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
