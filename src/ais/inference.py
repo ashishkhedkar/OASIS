@@ -65,7 +65,43 @@ def predict_vessels(
 
     return ranked
 
+def predict_vessels_from_origins(origins, top_n=10):
+    """
+    Run M4 vessel attribution for multiple candidate origins
+    produced by M3.
+    """
 
+    all_results = []
+
+    for origin in origins:
+        # Use M3's candidate origin as the center of the AIS search.
+        results = predict_vessels(
+            origin_latitude=origin["latitude"],
+            origin_longitude=origin["longitude"],
+            origin_time=None,
+            radius_km=10,
+            top_n=top_n,
+        )
+
+        if results.empty:
+            continue
+
+        # Attach M3 information so the final result keeps the
+        # connection between a vessel and its candidate origin.
+        results = results.copy()
+        results["origin_latitude"] = origin["latitude"]
+        results["origin_longitude"] = origin["longitude"]
+        results["origin_hours_back"] = origin["hours_back"]
+        results["origin_confidence"] = origin["confidence"]
+        results["origin_uncertainty_km"] = origin["uncertainty_km"]
+
+        all_results.append(results)
+
+    if not all_results:
+        return None
+
+    return __import__("pandas").concat(all_results, ignore_index=True)
+    
 if __name__ == "__main__":
     # Example candidate origin used to test the complete M4 pipeline.
     results = predict_vessels(
