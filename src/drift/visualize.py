@@ -65,12 +65,29 @@ def plot_origin_hypotheses(
         label="Probable origin centers",
     )
 
-    # Label each center with its confidence.
+    # Plot uncertainty circles around each origin center.
+    for center in centers:
+
+        circle = plt.Circle(
+            (
+                center["longitude"],
+                center["latitude"],
+            ),
+            center["uncertainty_km"] / 111.0,
+            fill=False,
+            linestyle="--",
+            alpha=0.5,
+        )
+
+        plt.gca().add_patch(circle)
+
+    # Label each center with confidence and uncertainty.
     for center in centers:
 
         plt.annotate(
             f"{center['hours_back']}h | "
-            f"Confidence: {center['confidence']:.2f}",
+            f"Confidence: {center['confidence']:.2f} | "
+            f"Uncertainty: {center['uncertainty_km']:.2f} km",
             (
                 center["longitude"],
                 center["latitude"],
