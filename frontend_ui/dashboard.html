@@ -680,12 +680,13 @@
                     const tableBody = document.getElementById("origin-table");
                     tableBody.innerHTML = "";
 
-                    currentOrigins = driftData.centers.map((c, idx) => {
-                        const lat = c.center_lat;
-                        const lon = c.center_lon;
-                        const hours_back = 6;
-                        const conf = 0.8;
-                        const uncert = c.radius_km || 5.0;
+                    currentOrigins = driftData.centers.map((c) => {
+                        // Use the actual field names returned by the M3 backend.
+                        const lat = c.latitude;
+                    const lon = c.longitude;
+                    const hours_back = c.hours_back;
+                    const conf = c.confidence;
+                    const uncert = c.uncertainty_km;
 
                         // Add row to table
                         const row = `<tr>
@@ -751,8 +752,36 @@
                                 .bindPopup(`<b>MMSI: ${v.MMSI}</b><br>Score: ${(v.attribution_score * 100).toFixed(1)}%`)
                                 .addTo(originLayer);
                         });
-                    } else {
-                        rankedTable.innerHTML = `<tr><td colspan="3" style="text-align: center;">No candidate vessels found</td></tr>`;
+                                        } else {
+                        // Demo fallback for the SIH presentation when the development AIS dataset
+                        // has no records matching the Ennore incident date and location.
+                        rankedTable.innerHTML = `
+                            <tr>
+                                <td colspan="3" style="text-align: center; color: #f59e0b; font-size: 9px; letter-spacing: 0.8px; padding-bottom: 10px;">
+                                    DEMO DATA — AIS matches unavailable for this incident dataset
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>419001234</td>
+                                <td>94.0%</td>
+                                <td><span class="warning-badge">HIGH CORRELATION</span></td>
+                            </tr>
+                            <tr>
+                                <td>419005678</td>
+                                <td>87.0%</td>
+                                <td><span class="warning-badge">STRONG SPATIAL</span></td>
+                            </tr>
+                            <tr>
+                                <td>419009876</td>
+                                <td>79.0%</td>
+                                <td><span class="warning-badge">MODERATE TEMPORAL</span></td>
+                            </tr>
+                            <tr>
+                                <td>419004321</td>
+                                <td>71.0%</td>
+                                <td><span class="warning-badge">LOWER CORRELATION</span></td>
+                            </tr>
+                        `;
                     }
                 }
             } catch (error) {
