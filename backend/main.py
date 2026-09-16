@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from database import engine, Base, get_db
 import models
 from src.data.sar_geolocation import extract_geolocation_points, RAW_SAR_DIR
-from src.segmentation.inference import detect_oil
+from src.segmentation.inference import detect_oil, detect_oil_tiled
 from src.drift.inference import predict_origins, group_origin_clusters, calculate_cluster_centers
 
 # Create database tables (if they don't exist yet)
@@ -112,7 +112,10 @@ def detect_spill(spill: OilSpillCreate, db: Session = Depends(get_db)):
         # Check if the file exists, if not we simulate or throw an error.
         # But we'll try running the real logic first.
         if image_path.exists():
-            oil_mask = detect_oil(str(image_path))
+            if image_path.suffix.lower() in [".tif", ".tiff"]:
+                oil_mask = detect_oil_tiled(str(image_path))
+            else:
+                oil_mask = detect_oil(str(image_path))
             confidence = 0.95 if oil_mask.sum() > 0 else 0.1
             area_sq_km = float(oil_mask.sum()) / 1000.0
         else:
