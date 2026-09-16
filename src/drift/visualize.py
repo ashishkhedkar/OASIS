@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+import folium
 
 from src.drift.inference import (
     predict_origins,
@@ -13,10 +13,33 @@ def plot_origin_hypotheses(
     spill_latitude,
     spill_longitude,
 ):
-    """Plot drift hypotheses and probable origin centers."""
+    """Create a map showing drift hypotheses and probable origins."""
 
-    plt.figure(figsize=(9, 7))
+    # Create map centered around the observed spill.
+    map_view = folium.Map(
+        location=[
+            spill_latitude,
+            spill_longitude,
+        ],
+        zoom_start=11,
+        tiles="Esri.WorldStreetMap",
+    )
 
+    # Mark observed spill location.
+    folium.Marker(
+        [
+            spill_latitude,
+            spill_longitude,
+        ],
+        popup="Observed Spill",
+        tooltip="Observed Spill",
+        icon=folium.Icon(
+            color="red",
+            icon="info-sign",
+        ),
+    ).add_to(map_view)
+
+    # Plot each windage trajectory.
     windages = sorted(
         set(origin["windage"] for origin in origins)
     )
@@ -29,90 +52,64 @@ def plot_origin_hypotheses(
             if origin["windage"] == windage
         ]
 
-        latitudes = [
-            point["latitude"]
+        coordinates = [
+            [
+                point["latitude"],
+                point["longitude"],
+            ]
             for point in points
         ]
 
-        longitudes = [
-            point["longitude"]
-            for point in points
-        ]
+        folium.PolyLine(
+            coordinates,
+            tooltip=f"Windage {windage:.3f}",
+        ).add_to(map_view)
 
-        plt.plot(
-            longitudes,
-            latitudes,
-            marker="o",
-            label=f"Windage {windage:.3f}",
-        )
-
-    # Plot probable origin cluster centers.
-    center_latitudes = [
-        center["latitude"]
-        for center in centers
-    ]
-
-    center_longitudes = [
-        center["longitude"]
-        for center in centers
-    ]
-
-    plt.scatter(
-        center_longitudes,
-        center_latitudes,
-        marker="*",
-        s=180,
-        label="Probable origin centers",
-    )
-
-    # Plot uncertainty circles around each origin center.
+    # Plot probable origin centers and uncertainty circles.
     for center in centers:
 
-        circle = plt.Circle(
-            (
-                center["longitude"],
-                center["latitude"],
+        latitude = center["latitude"]
+        longitude = center["longitude"]
+
+        folium.Marker(
+            [
+                latitude,
+                longitude,
+            ],
+            popup=(
+                f"Origin: {center['hours_back']}h back<br>"
+                f"Confidence: {center['confidence']:.2f}<br>"
+                f"Uncertainty: "
+                f"{center['uncertainty_km']:.2f} km"
             ),
-            center["uncertainty_km"] / 111.0,
+            tooltip=(
+                f"Probable Origin - "
+                f"{center['hours_back']}h back"
+            ),
+        ).add_to(map_view)
+
+        folium.Circle(
+            [
+                latitude,
+                longitude,
+            ],
+            radius=center["uncertainty_km"] * 1000,
             fill=False,
-            linestyle="--",
-            alpha=0.5,
-        )
-
-        plt.gca().add_patch(circle)
-
-    # Label each center with confidence and uncertainty.
-    for center in centers:
-
-        plt.annotate(
-            f"{center['hours_back']}h | "
-            f"Confidence: {center['confidence']:.2f} | "
-            f"Uncertainty: {center['uncertainty_km']:.2f} km",
-            (
-                center["longitude"],
-                center["latitude"],
+            tooltip=(
+                f"Uncertainty: "
+                f"{center['uncertainty_km']:.2f} km"
             ),
-            xytext=(8, 8),
-            textcoords="offset points",
-        )
+        ).add_to(map_view)
 
-    # Mark observed spill location.
-    plt.scatter(
-        spill_longitude,
-        spill_latitude,
-        marker="x",
-        s=120,
-        label="Observed spill",
+    # Save the interactive map.
+    output_file = "probable_origin_map.html"
+
+    map_view.save(output_file)
+
+    print(
+        f"\nInteractive map saved to: "
+        f"{output_file}"
     )
-
-    plt.xlabel("Longitude")
-    plt.ylabel("Latitude")
-    plt.title("Oil Spill Backtracking - Probable Origins")
-
-    plt.grid(True)
-    plt.legend()
-
-    plt.show()
 
 
 if __name__ == "__main__":
