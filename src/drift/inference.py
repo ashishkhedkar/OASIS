@@ -1,5 +1,6 @@
 from src.drift.trajectory import generate_backtrack_trajectory
 from src.drift.confidence import calculate_confidence
+from src.drift.coordinate_utils import haversine_distance
 
 import json
 from pathlib import Path
@@ -80,7 +81,8 @@ def group_origin_clusters(origins):
 def calculate_cluster_centers(clusters):
     """
     Calculate the average latitude, longitude,
-    and confidence for each origin cluster.
+    confidence, and uncertainty distance
+    for each origin cluster.
     """
 
     centers = []
@@ -114,6 +116,16 @@ def calculate_cluster_centers(clusters):
             total_confidence / len(points)
         )
 
+        max_distance = max(
+            haversine_distance(
+                center_latitude,
+                center_longitude,
+                point["latitude"],
+                point["longitude"],
+            )
+            for point in points
+        )
+
         centers.append(
             {
                 "hours_back": hours_back,
@@ -121,6 +133,7 @@ def calculate_cluster_centers(clusters):
                 "longitude": center_longitude,
                 "points": len(points),
                 "confidence": average_confidence,
+                "uncertainty_km": max_distance,
             }
         )
 
@@ -191,7 +204,8 @@ if __name__ == "__main__":
             f"{center['latitude']:.6f}, "
             f"{center['longitude']:.6f} "
             f"({center['points']} hypotheses, "
-            f"confidence: {center['confidence']:.2f})"
+            f"confidence: {center['confidence']:.2f}, "
+            f"uncertainty: {center['uncertainty_km']:.2f} km)"
         )
 
     save_probable_origins(centers)

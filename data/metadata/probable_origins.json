@@ -4,34 +4,39 @@
         "latitude": 13.23654519330392,
         "longitude": 80.36851800984529,
         "points": 5,
-        "confidence": 0.8333333333333334
+        "confidence": 0.8333333333333334,
+        "uncertainty_km": 0.18600461929769527
     },
     {
         "hours_back": 2,
         "latitude": 13.24494144664165,
         "longitude": 80.37365140319477,
         "points": 5,
-        "confidence": 0.6666666666666667
+        "confidence": 0.6666666666666667,
+        "uncertainty_km": 0.36911775409309744
     },
     {
         "hours_back": 3,
         "latitude": 13.255725530000635,
         "longitude": 80.37838379189688,
         "points": 5,
-        "confidence": 0.5
+        "confidence": 0.5,
+        "uncertainty_km": 1.4358314797060143
     },
     {
         "hours_back": 4,
         "latitude": 13.272784370873424,
         "longitude": 80.38256953891377,
         "points": 5,
-        "confidence": 0.33333333333333337
+        "confidence": 0.33333333333333337,
+        "uncertainty_km": 1.8356800015483081
     },
     {
         "hours_back": 5,
         "latitude": 13.291506709245407,
         "longitude": 80.38636728776495,
         "points": 5,
-        "confidence": 0.16666666666666663
+        "confidence": 0.16666666666666663,
+        "uncertainty_km": 1.9872830749426
     }
 ]
