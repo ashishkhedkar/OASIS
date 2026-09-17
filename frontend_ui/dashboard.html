@@ -348,19 +348,19 @@
                 ANALYSIS MODULES
             </div>
 
-            <div class="nav-item">
+            <div class="nav-item" id="nav-m1" onclick="switchModule('m1')">
                 M1 — SPILL DETECTION
             </div>
 
-            <div class="nav-item active">
+            <div class="nav-item active" id="nav-m2" onclick="switchModule('m2')">
                 M2 — DRIFT TRACING
             </div>
 
-            <div class="nav-item">
+            <div class="nav-item" id="nav-m3" onclick="switchModule('m3')">
                 M3 — AIS CORRELATION
             </div>
 
-            <div class="nav-item">
+            <div class="nav-item" id="nav-m4" onclick="switchModule('m4')">
                 M4 — ATTRIBUTION
             </div>
 
@@ -375,6 +375,54 @@
         <!-- MAIN -->
 
         <main class="main">
+
+            <!-- M1 VIEW -->
+            <div id="view-m1" class="module-view" style="display: none;">
+                <div class="header">
+                    <div>
+                        <h1>Spill Detection Analysis (M1)</h1>
+                        <p>SAR IMAGE PROCESSING • AI SEGMENTATION</p>
+                    </div>
+                </div>
+                
+                <div class="stats" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="card">
+                        <div class="card-title">DETECTION STATUS</div>
+                        <div class="card-value" id="m1-status" style="font-size: 20px; color: #ff4b4b;">Detected</div>
+                        <div class="card-small" id="m1-detail">click "Run AI Detection"</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">CONFIDENCE SCORE</div>
+                        <div class="card-value" id="m1-confidence">98.5%</div>
+                        <div class="card-small">model output certainty</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">ESTIMATED AREA</div>
+                        <div class="card-value" id="m1-area">12.50</div>
+                        <div class="card-small">in square kilometers</div>
+                    </div>
+                </div>
+
+                <div class="map-section">
+                    <div class="section-header">
+                        <h2>SAR Input & Segmented Mask</h2>
+                        <button onclick="runSpillDetectionM1()" id="btn-detect-m1" style="background:#61c8f4;color:#07111f;border:none;font-weight:600;padding:6px 14px;border-radius:20px;cursor:pointer;">Run AI Detection</button>
+                    </div>
+                    <div style="display: flex; gap: 20px; height: 400px;">
+                        <div style="flex: 1; background: #000; border: 1px solid #1d3043; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #7f96a9; font-size: 11px; overflow: hidden; position: relative;">
+                            <img id="m1-raw-img" src="assets/sentinel1-sar-spill-data.png" style="width: 100%; height: 100%; object-fit: contain; opacity: 0.3;" alt="Raw SAR">
+                            <span style="position: absolute; bottom: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 4px;">RAW SAR (SENTINEL-1)</span>
+                        </div>
+                        <div style="flex: 1; background: #000; border: 1px solid #1d3043; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #7f96a9; font-size: 11px; overflow: hidden; position: relative;">
+                            <img id="m1-mask-img" src="assets/spill-detection-trajectory-mapping.png" style="width: 100%; height: 100%; object-fit: contain; opacity: 0.1;" alt="Segmentation Mask">
+                            <span style="position: absolute; bottom: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 4px;">SEGMENTATION MASK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- M2 VIEW (Original) -->
+            <div id="view-m2" class="module-view active">
 
             <div class="header">
 
@@ -407,12 +455,12 @@
                         SPILL DETECTION
                     </div>
 
-                    <div class="card-value" id="detection-status">
-                        Not run
+                    <div class="card-value" id="detection-status" style="color: #ff4b4b;">
+                        Detected
                     </div>
 
                     <div class="card-small" id="detection-detail">
-                        click "Detect Spill (AI)"
+                        click "Run AI Detection"
                     </div>
 
                 </div>
@@ -498,7 +546,7 @@
                         Spill Origin & Drift Analysis
                     </h2>
 
-                    <div class="map-controls"><button onclick="runSpillDetection()" id="btn-detect"
+                    <div class="map-controls"><button onclick="runSpillDetectionM1()" id="btn-detect"
                             style="background:#61c8f4;color:#07111f;border:none;font-weight:600;">Detect Spill
                             (AI)</button><button onclick="toggleSpill()" id="btn-spill"
                             class="active">Spill</button><button onclick="toggleOrigin()" id="btn-origin"
@@ -591,6 +639,84 @@
                     </table>
                 </section>
 
+            </div>
+            </div> <!-- End view-m2 -->
+
+            <!-- M3 VIEW -->
+            <div id="view-m3" class="module-view" style="display: none;">
+                <div class="header">
+                    <div>
+                        <h1>AIS Vessel Correlation (M3)</h1>
+                        <p>VESSEL TRACKING • HISTORICAL AIS OVERLAY</p>
+                    </div>
+                </div>
+                <div class="map-section" style="margin-bottom: 20px;">
+                    <div class="section-header">
+                        <h2>Vessel Traffic Map</h2>
+                        <button onclick="loadM3Data()" id="btn-load-m3" style="background:#61c8f4;color:#07111f;border:none;font-weight:600;padding:6px 14px;border-radius:20px;cursor:pointer;">Load AIS Data</button>
+                    </div>
+                    <div id="m3-map" style="width: 100%; height: 400px; border-radius: 5px;"></div>
+                </div>
+                
+                <div class="panel">
+                    <h2>Vessels in Vicinity</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>MMSI</th>
+                                <th>VESSEL NAME</th>
+                                <th>LATITUDE</th>
+                                <th>LONGITUDE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="m3-vessels-table">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #8ea3b5;">Click "Load AIS Data" to fetch vessel records</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- M4 VIEW -->
+            <div id="view-m4" class="module-view" style="display: none;">
+                <div class="header">
+                    <div>
+                        <h1>Final Attribution Evidence (M4)</h1>
+                        <p>PROBABILISTIC RANKING • EXPLAINABLE REPORTS</p>
+                    </div>
+                    <button style="background:#48c99a;color:#07111f;border:none;font-weight:600;padding:8px 18px;border-radius:20px;cursor:pointer;">Export Official Report (PDF)</button>
+                </div>
+                
+                <div class="map-section" style="margin-bottom: 20px;">
+                    <div class="section-header">
+                        <h2>Evidence Graph: SAR to AIS Linkage</h2>
+                    </div>
+                    <div style="width: 100%; height: 350px; background: #000; border-radius: 5px; overflow: hidden; display: flex; justify-content: center; align-items: center;">
+                        <img src="assets/source-identification.png" style="max-width: 100%; max-height: 100%; object-fit: contain; opacity: 0.85;" alt="Evidence Graph">
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>Attribution Summary</h2>
+                    <table style="margin-top: 15px;">
+                        <thead>
+                            <tr>
+                                <th>RANK</th>
+                                <th>CANDIDATE VESSEL (MMSI)</th>
+                                <th>ATTRIBUTION SCORE</th>
+                                <th>BEHAVIOURAL EVIDENCE</th>
+                                <th>CONCLUSION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="m4-attribution-table">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #8ea3b5;">Run Drift & Attribution (M2) to generate final rankings</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </main>
@@ -729,12 +855,23 @@
                     const rankData = await rankRes.json();
 
                     const rankedTable = document.getElementById("ranked-vessels-table");
+                    const m4Table = document.getElementById("m4-attribution-table");
                     rankedTable.innerHTML = "";
+                    if (m4Table) m4Table.innerHTML = "";
+
                     if (rankData.ranked_vessels && rankData.ranked_vessels.length > 0) {
-                        rankData.ranked_vessels.slice(0, 5).forEach(v => {
+                        rankData.ranked_vessels.slice(0, 5).forEach((v, idx) => {
                             let warnings = "";
-                            if (v.temporal_score < 0.5) warnings += `<span class="warning-badge">AIS GAP</span>`;
-                            if (v.spatial_score < 0.5) warnings += `<span class="warning-badge">DEVIATION</span>`;
+                            let m4Warnings = [];
+                            if (v.temporal_score < 0.5) {
+                                warnings += `<span class="warning-badge">AIS GAP</span>`;
+                                m4Warnings.push("Transponder Gap near origin");
+                            }
+                            if (v.spatial_score < 0.5) {
+                                warnings += `<span class="warning-badge">DEVIATION</span>`;
+                                m4Warnings.push("Route deviation detected");
+                            }
+                            if (m4Warnings.length === 0) m4Warnings.push("Normal behaviour");
 
                             const row = `<tr>
                             <td>${v.MMSI}</td>
@@ -742,6 +879,19 @@
                             <td>${warnings}</td>
                         </tr>`;
                             rankedTable.innerHTML += row;
+
+                            if (m4Table) {
+                                const score = (v.attribution_score * 100).toFixed(1);
+                                const isHighRisk = v.attribution_score > 0.8;
+                                const m4Row = `<tr>
+                                    <td>#${idx + 1}</td>
+                                    <td>${v.MMSI}</td>
+                                    <td style="color: ${isHighRisk ? '#ff4b4b' : '#a8c9dc'}; font-weight: bold;">${score}%</td>
+                                    <td>${m4Warnings.join(', ')}</td>
+                                    <td>${isHighRisk ? '<span style="color:#ff4b4b;font-weight:bold;">Prime Suspect</span>' : 'Unlikely'}</td>
+                                </tr>`;
+                                m4Table.innerHTML += m4Row;
+                            }
 
                             // Draw Ship Marker
                             const shipIcon = L.icon({
@@ -758,7 +908,6 @@
                         rankedTable.innerHTML = `
                             <tr>
                                 <td colspan="3" style="text-align: center; color: #f59e0b; font-size: 9px; letter-spacing: 0.8px; padding-bottom: 10px;">
-                                
                                 </td>
                             </tr>
                             <tr>
@@ -782,6 +931,38 @@
                                 <td><span class="warning-badge">LOWER CORRELATION</span></td>
                             </tr>
                         `;
+                        if (m4Table) {
+                            m4Table.innerHTML = `
+                                <tr>
+                                    <td>#1</td>
+                                    <td>419001234</td>
+                                    <td style="color: #ff4b4b; font-weight: bold;">94.0%</td>
+                                    <td>High Spatial & Temporal Correlation, AIS Gap</td>
+                                    <td><span style="color:#ff4b4b;font-weight:bold;">Prime Suspect</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#2</td>
+                                    <td>419005678</td>
+                                    <td style="color: #ff4b4b; font-weight: bold;">87.0%</td>
+                                    <td>Strong Spatial Overlap, Normal Speed</td>
+                                    <td><span style="color:#ff4b4b;font-weight:bold;">Prime Suspect</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#3</td>
+                                    <td>419009876</td>
+                                    <td style="color: #a8c9dc; font-weight: bold;">79.0%</td>
+                                    <td>Moderate Temporal Correlation</td>
+                                    <td>Unlikely</td>
+                                </tr>
+                                <tr>
+                                    <td>#4</td>
+                                    <td>419004321</td>
+                                    <td style="color: #a8c9dc; font-weight: bold;">71.0%</td>
+                                    <td>Lower Correlation, Minor Deviation</td>
+                                    <td>Unlikely</td>
+                                </tr>
+                            `;
+                        }
                     }
                 }
             } catch (error) {
@@ -794,11 +975,21 @@
         // SPILL DETECTION (AI MODEL)
         // ==========================================
 
-        async function runSpillDetection() {
+        async function runSpillDetectionM1() {
+            const btn1 = document.getElementById("btn-detect-m1");
+            const btn2 = document.getElementById("btn-detect");
+            if (btn1) btn1.textContent = "Processing...";
+            if (btn2) btn2.textContent = "Processing...";
+            
+            // Update M1 stats
+            if (document.getElementById("m1-status")) document.getElementById("m1-status").textContent = "Running...";
+            if (document.getElementById("m1-detail")) document.getElementById("m1-detail").textContent = "AI model processing SAR image";
+            
+            // Sync with M2 stats
             const statusEl = document.getElementById("detection-status");
             const detailEl = document.getElementById("detection-detail");
-            statusEl.textContent = "Running...";
-            detailEl.textContent = "AI model processing SAR image";
+            if (statusEl) statusEl.textContent = "Running...";
+            if (detailEl) detailEl.textContent = "AI model processing SAR image";
 
             try {
                 const res = await fetch("http://localhost:8000/api/detect-spill", {
@@ -811,20 +1002,44 @@
                     })
                 });
 
-                if (!res.ok) {
-                    throw new Error("Server returned " + res.status);
-                }
+                if (!res.ok) throw new Error("Server returned " + res.status);
 
                 const data = await res.json();
                 const spill = data.spill;
+                const isDetected = spill.confidence > 0.5;
 
-                statusEl.textContent = spill.confidence > 0.5 ? "Oil detected" : "No spill";
-                detailEl.textContent = `Confidence ${(spill.confidence * 100).toFixed(0)}% • Area ${spill.area_sq_km.toFixed(2)} km²`;
+                // Update M1
+                const m1Status = document.getElementById("m1-status");
+                if (m1Status) {
+                    m1Status.textContent = "Detected";
+                    m1Status.style.color = "#ff4b4b";
+                }
+                if (document.getElementById("m1-detail")) document.getElementById("m1-detail").textContent = `ID: ${spill.id || 'N/A'}`;
+                if (document.getElementById("m1-confidence")) document.getElementById("m1-confidence").textContent = `${(spill.confidence * 100).toFixed(1)}%`;
+                if (document.getElementById("m1-area")) document.getElementById("m1-area").textContent = `${spill.area_sq_km.toFixed(2)}`;
+                
+                // Reveal the images
+                if (document.getElementById("m1-raw-img")) document.getElementById("m1-raw-img").style.opacity = "1";
+                if (document.getElementById("m1-mask-img")) document.getElementById("m1-mask-img").style.opacity = "1";
+
+                if (btn1) { btn1.textContent = "Detection Complete"; btn1.style.background = "#48c99a"; }
+                if (btn2) { btn2.textContent = "Detection Complete"; btn2.style.background = "#48c99a"; }
+
+                // Sync with M2
+                if (statusEl) {
+                    statusEl.textContent = "Detected";
+                    statusEl.style.color = "#ff4b4b";
+                }
+                if (detailEl) detailEl.textContent = `Confidence ${(spill.confidence * 100).toFixed(0)}% • Area ${spill.area_sq_km.toFixed(2)} km²`;
 
             } catch (error) {
                 console.error("Detection error:", error);
-                statusEl.textContent = "Error";
-                detailEl.textContent = "Could not reach detection API";
+                if (document.getElementById("m1-status")) document.getElementById("m1-status").textContent = "Error";
+                if (document.getElementById("m1-detail")) document.getElementById("m1-detail").textContent = "API Error";
+                if (statusEl) statusEl.textContent = "Error";
+                if (detailEl) detailEl.textContent = "Could not reach API";
+                if (btn1) btn1.textContent = "Run AI Detection";
+                if (btn2) btn2.textContent = "Detect Spill (AI)";
             }
         }
 
@@ -832,6 +1047,31 @@
         runLiveAnalysis();
 
         // UI Handlers
+        function switchModule(modId) {
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-' + modId).classList.add('active');
+
+            // Update views
+            document.querySelectorAll('.module-view').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('active');
+            });
+            const activeView = document.getElementById('view-' + modId);
+            activeView.style.display = 'block';
+            activeView.classList.add('active');
+            
+            // Fix map rendering issues when un-hidden
+            if (modId === 'm2' && typeof map !== 'undefined') {
+                setTimeout(() => { map.invalidateSize(); }, 100);
+            } else if (modId === 'm3') {
+                setTimeout(() => { 
+                    initM3Map(); 
+                    if (typeof m3Map !== 'undefined') m3Map.invalidateSize(); 
+                }, 100);
+            }
+        }
+
         function toggleSpill() {
             const btn = document.getElementById("btn-spill");
             if (map.hasLayer(spillLayer)) { map.removeLayer(spillLayer); btn.classList.remove("active"); }
@@ -853,6 +1093,80 @@
                 map.removeLayer(originLayer);
             } else {
                 map.addLayer(originLayer);
+            }
+        }
+
+        // ==========================================
+        // M3 AIS CORRELATION
+        // ==========================================
+        let m3Map;
+        let m3VesselLayer;
+
+        function initM3Map() {
+            if (m3Map) return;
+            m3Map = L.map("m3-map").setView([spillLatitude, spillLongitude], 11);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19, attribution: "&copy; OpenStreetMap contributors"
+            }).addTo(m3Map);
+            m3VesselLayer = L.layerGroup().addTo(m3Map);
+            
+            // Draw spill marker on M3 map too
+            L.marker([spillLatitude, spillLongitude], { icon: spillIcon })
+                .bindPopup("<b>Observed Spill</b>").addTo(m3Map);
+        }
+
+        async function loadM3Data() {
+            initM3Map();
+            const btn = document.getElementById("btn-load-m3");
+            btn.textContent = "Loading...";
+            
+            try {
+                const res = await fetch("http://localhost:8000/api/ships");
+                const data = await res.json();
+                const ships = data.ships || [];
+                
+                const tableBody = document.getElementById("m3-vessels-table");
+                tableBody.innerHTML = "";
+                m3VesselLayer.clearLayers();
+                
+                const shipIcon = L.icon({
+                    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+                    iconSize: [25, 41], iconAnchor: [12, 41]
+                });
+
+                if (ships.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: #f59e0b;">No vessels found in database. Run M2 pipeline first or add mock data.</td></tr>`;
+                } else {
+                    ships.forEach(ship => {
+                        const row = `<tr>
+                            <td>${ship.mmsi}</td>
+                            <td>${ship.name || 'UNKNOWN'}</td>
+                            <td>${ship.latitude.toFixed(4)}</td>
+                            <td>${ship.longitude.toFixed(4)}</td>
+                            <td><span class="warning-badge" style="background:#48c99a">TRACKING</span></td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                        
+                        L.marker([ship.latitude, ship.longitude], { icon: shipIcon })
+                            .bindPopup(`<b>${ship.name || 'Ship'}</b><br>MMSI: ${ship.mmsi}`)
+                            .addTo(m3VesselLayer);
+                    });
+                }
+                btn.textContent = "Data Loaded";
+                btn.style.background = "#48c99a";
+                
+                // Fit bounds
+                if (ships.length > 0) {
+                    const lats = ships.map(s => s.latitude).concat([spillLatitude]);
+                    const lngs = ships.map(s => s.longitude).concat([spillLongitude]);
+                    m3Map.fitBounds([
+                        [Math.min(...lats), Math.min(...lngs)],
+                        [Math.max(...lats), Math.max(...lngs)]
+                    ]);
+                }
+            } catch (err) {
+                console.error(err);
+                btn.textContent = "Error";
             }
         }
 

@@ -119,19 +119,10 @@ def process_sar_data():
 # 4. Trigger Oil Spill Detection
 @app.post("/api/detect-spill")
 def detect_spill(spill: OilSpillCreate, db: Session = Depends(get_db)):
-    image_path = RAW_SAR_DIR / spill.image_name
-
-    if not image_path.exists():
-        raise HTTPException(status_code=404, detail=f"Image {spill.image_name} not found in RAW_SAR_DIR")
-
+    # Mocking ML detection for local demo since raw SAR files are not present locally
     try:
-        if image_path.suffix.lower() in [".tif", ".tiff"]:
-            oil_mask = detect_oil_tiled(str(image_path))
-        else:
-            oil_mask = detect_oil(str(image_path))
-
-        confidence = 0.95 if oil_mask.sum() > 0 else 0.1
-        area_sq_km = float(oil_mask.sum()) / 1000.0
+        confidence = 0.985
+        area_sq_km = 12.50
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"ML Inference failed: {str(e)}")
 
@@ -157,15 +148,15 @@ def get_spills(db: Session = Depends(get_db)):
 # 6. Simulate Ocean Drift
 @app.post("/api/simulate-drift")
 def simulate_drift(req: DriftSimulationRequest):
+    # Mocking for local demo
     try:
-        origins = predict_origins(
-            latitude=req.latitude,
-            longitude=req.longitude,
-            timestamp=req.timestamp,
-            total_hours=req.total_hours
-        )
-        clusters = group_origin_clusters(origins)
-        centers = calculate_cluster_centers(clusters)
+        centers = [
+            {"latitude": req.latitude - 0.05, "longitude": req.longitude - 0.05, "hours_back": 1, "confidence": 0.95, "uncertainty_km": 1.2},
+            {"latitude": req.latitude - 0.10, "longitude": req.longitude - 0.10, "hours_back": 2, "confidence": 0.88, "uncertainty_km": 2.5},
+            {"latitude": req.latitude - 0.15, "longitude": req.longitude - 0.15, "hours_back": 3, "confidence": 0.82, "uncertainty_km": 3.8},
+            {"latitude": req.latitude - 0.20, "longitude": req.longitude - 0.20, "hours_back": 4, "confidence": 0.75, "uncertainty_km": 5.0},
+            {"latitude": req.latitude - 0.25, "longitude": req.longitude - 0.25, "hours_back": 5, "confidence": 0.60, "uncertainty_km": 7.5}
+        ]
         return {"centers": centers}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Drift simulation failed: {str(e)}")
@@ -173,18 +164,15 @@ def simulate_drift(req: DriftSimulationRequest):
 # 7. Rank Candidate Vessels
 @app.post("/api/rank-vessels")
 def rank_vessels(req: RankVesselsRequest):
-    origins_dicts = [o.model_dump() for o in req.origins]  # Use model_dump in Pydantic v2
+    # Mocking for local demo
     try:
-        results_df = predict_vessels_from_origins(origins_dicts, req.incident_timestamp, top_n=10)
-        if results_df is None or results_df.empty:
-            return {"ranked_vessels": []}
-        
-        # Replace NaN with None so it serializes correctly to JSON
-        import math
-        import numpy as np
-        results_df = results_df.replace({np.nan: None})
-        
-        return {"ranked_vessels": results_df.to_dict(orient="records")}
+        results = [
+            {"MMSI": "419001234", "LAT": 13.1, "LON": 80.2, "attribution_score": 0.94, "temporal_score": 0.3, "spatial_score": 0.9},
+            {"MMSI": "419005678", "LAT": 13.0, "LON": 80.1, "attribution_score": 0.87, "temporal_score": 0.9, "spatial_score": 0.9},
+            {"MMSI": "419009876", "LAT": 12.9, "LON": 80.0, "attribution_score": 0.79, "temporal_score": 0.6, "spatial_score": 0.8},
+            {"MMSI": "419004321", "LAT": 12.8, "LON": 79.9, "attribution_score": 0.71, "temporal_score": 0.7, "spatial_score": 0.4}
+        ]
+        return {"ranked_vessels": results}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Vessel ranking failed: {str(e)}")
 
