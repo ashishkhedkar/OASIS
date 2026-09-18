@@ -1,0 +1,9 @@
+.venv/
+.git/
+__pycache__/
+**/__pycache__/
+data/raw/
+data/processed/
+Deep-SAR-Oil-Spill-Segmentation-Refined/
+*.zip
+frontend_ui/screen.png
